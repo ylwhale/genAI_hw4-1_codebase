@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Voxel Grove — browser verification</title>
+<style>
+body { margin:0; background:#18372e; color:#e9efd8; font:15px/1.6 system-ui,sans-serif; }
+#results-panel { position:fixed; z-index:10; top:95px; left:24px; max-width:440px; max-height:calc(100% - 285px); overflow:auto; margin:0; padding:18px; border:1px solid #b9cba544; border-radius:5px; background:#18372ef0; font:11px/1.5 system-ui,sans-serif; }
+#results-panel h1 { font:600 18px/1.3 system-ui,sans-serif; letter-spacing:0; margin:0 0 12px; }
+#results-panel p { margin:7px 0; } #results-panel button { padding:8px 12px; background:#dce8b4; border:0; border-radius:4px; color:#18372e; font:inherit; cursor:pointer; }
+.pass { color:#dce8b4; } .fail { color:#ffc2af; } code { color:#b9cba5; }
+</style></head>
+<body><div id="app"></div><main id="results-panel"><h1>Voxel Grove · browser checks</h1><p>Component preview; mouse capture is not exercised. The isolated test save does not modify the playable world's save.</p><div id="results"></div><button id="reload" hidden>Reload to verify persistence</button><p><a style="color:#dce8b4" href="/">Return to the game</a></p></main><script type="module" src="./browser-checks.js"></script></body>
+</html>

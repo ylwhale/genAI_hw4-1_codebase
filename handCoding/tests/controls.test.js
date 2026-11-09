@@ -1,0 +1,44 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createControls } from '../src/controls.js';
+
+test('input is gated by capture, jump is consumed once, mouse look clamps, and blur clears movement', () => {
+  const doc = new EventTarget(), win = new EventTarget(), canvas = {};
+  globalThis.document = doc;
+  globalThis.window = win;
+  doc.pointerLockElement = null;
+  doc.exitPointerLock = () => { doc.pointerLockElement = null; doc.dispatchEvent(new Event('pointerlockchange')); };
+  const player = { yaw: 0, pitch: 0 }, states = [];
+  let toolCycles = 0;
+  const controls = createControls(canvas, player, locked => states.push(locked), () => toolCycles++);
+  const send = (type, values) => { const event = new Event(type, { cancelable: true }); Object.assign(event, values); doc.dispatchEvent(event); return event; };
+  send('keydown', { code: 'KeyW' });
+  send('keydown', { code: 'KeyQ', repeat: false });
+  assert.equal(toolCycles, 0);
+  send('mousemove', { movementX: 100, movementY: 100 });
+  assert.equal(controls.read().forward, false);
+  assert.equal(player.yaw, 0);
+  doc.pointerLockElement = canvas;
+  doc.dispatchEvent(new Event('pointerlockchange'));
+  assert.equal(send('keydown', { code: 'KeyW' }).defaultPrevented, true);
+  send('keydown', { code: 'KeyQ', repeat: false });
+  send('keydown', { code: 'KeyQ', repeat: true });
+  assert.equal(toolCycles, 1);
+  send('keydown', { code: 'Space', repeat: false });
+  assert.equal(controls.read().forward, true);
+  assert.equal(controls.read().jump, false); // The first read consumed the edge request.
+  send('keydown', { code: 'Space', repeat: true });
+  assert.equal(controls.read().jump, false);
+  send('keyup', { code: 'Space' });
+  send('keydown', { code: 'Space', repeat: false });
+  assert.equal(controls.read().jump, true);
+  send('mousemove', { movementX: 100, movementY: 10000 });
+  assert.equal(player.yaw, -0.2);
+  assert.ok(player.pitch > -Math.PI / 2 && player.pitch < 0);
+  win.dispatchEvent(new Event('blur'));
+  assert.equal(controls.locked(), false);
+  assert.equal(controls.read().forward, false);
+  assert.deepEqual(states, [true, false]);
+  delete globalThis.document;
+  delete globalThis.window;
+});

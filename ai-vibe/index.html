@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Voxel Grove — a small Minecraft-inspired voxel sandbox built with Three.js." />
+    <title>Voxel Grove</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="vignette" aria-hidden="true"></div>
+      <div id="low-health" aria-hidden="true"></div>
+      <div id="damage-flash" aria-hidden="true"></div>
+
+      <!-- In-game HUD -->
+      <div id="hud" class="hidden">
+        <div id="crosshair" aria-hidden="true"></div>
+        <div id="attack-meter" aria-hidden="true"><span></span></div>
+        <svg id="action-ring" viewBox="0 0 44 44" aria-hidden="true">
+          <circle class="ring-track" cx="22" cy="22" r="17" />
+          <circle class="ring-fill" cx="22" cy="22" r="17" />
+        </svg>
+        <div id="save-indicator" aria-live="polite">✓ Saved</div>
+        <div id="toast" role="status" aria-live="polite"></div>
+        <div id="bottom-bar">
+          <div id="tool-panel" aria-label="Active tool">
+            <span id="tool-name" aria-live="polite"></span>
+            <span class="tool-icon-wrap"><canvas id="tool-icon" width="64" height="64"></canvas></span>
+            <span class="tool-text">
+              <span class="tool-label">Tool</span>
+              <span id="tool-panel-name"></span>
+            </span>
+            <kbd class="tool-key">Q</kbd>
+          </div>
+          <div id="hotbar" role="list" aria-label="Block hotbar">
+            <span id="block-name" aria-live="polite"></span>
+            <div id="health" role="meter" aria-label="Health" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+              <span id="hearts"></span>
+              <span id="health-value">100</span>
+            </div>
+          </div>
+        </div>
+        <div id="esc-hint">Esc — pause</div>
+        <div id="monster-count" aria-live="polite"></div>
+      </div>
+
+      <!-- Title / pause menu -->
+      <div id="menu" class="overlay">
+        <div class="menu-panel">
+          <h1 id="menu-title" class="logo">
+            <span class="logo-voxel">Voxel</span><span class="logo-grove">Grove</span>
+          </h1>
+          <p id="menu-subtitle" class="tagline">A tiny floating-island sandbox</p>
+
+          <button id="play-btn" class="btn btn-primary" type="button">Play</button>
+          <p id="menu-message" class="menu-message" role="alert" hidden></p>
+
+          <section class="controls" aria-label="Controls">
+            <h2>How to play</h2>
+            <ul>
+              <li><span class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><span>Move</span></li>
+              <li><span class="keys"><kbd class="wide">Mouse</kbd></span><span>Look around</span></li>
+              <li><span class="keys"><kbd class="wide">Space</kbd></span><span>Jump</span></li>
+              <li><span class="keys"><kbd class="wide">Left click</kbd></span><span>Mine / attack</span></li>
+              <li><span class="keys"><kbd class="wide">Right click</kbd></span><span>Build block</span></li>
+              <li><span class="keys"><kbd>1</kbd>–<kbd>5</kbd></span><span>Choose block</span></li>
+              <li><span class="keys"><kbd>Q</kbd></span><span>Switch tool</span></li>
+              <li><span class="keys"><kbd class="wide">Esc</kbd></span><span>Release mouse / pause</span></li>
+            </ul>
+            <p class="hint">Mossling and Stoneguard monsters roam the island — strike them when they're close (they hit back!). Mining and building take about a second; hold the button to keep going. Your island saves automatically.</p>
+          </section>
+
+          <footer class="menu-footer">
+            <span id="save-status" class="save-status"></span>
+            <button id="reset-btn" class="btn btn-secondary" type="button">Reset world</button>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Death screen -->
+      <div id="death" class="overlay death hidden" role="dialog" aria-modal="true" aria-labelledby="death-title">
+        <div class="death-panel">
+          <h2 id="death-title">You were defeated</h2>
+          <p id="death-cause" class="death-cause"></p>
+          <p class="death-note">Your island is safe — every block you mined or built is still saved.</p>
+          <button id="respawn-btn" class="btn btn-primary" type="button">Respawn</button>
+          <p id="death-message" class="menu-message" role="alert" hidden></p>
+        </div>
+      </div>
+
+      <!-- Reset confirmation -->
+      <div id="confirm" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <div class="modal-panel">
+          <h2 id="confirm-title">Reset the island?</h2>
+          <p>All of your building changes will be erased and the original island (seed 42) will be restored. This can't be undone.</p>
+          <div class="modal-actions">
+            <button id="confirm-cancel" class="btn btn-secondary" type="button">Cancel</button>
+            <button id="confirm-reset" class="btn btn-danger" type="button">Reset world</button>
+          </div>
+        </div>
+      </div>
+
+      <noscript><div class="fatal">Voxel Grove needs JavaScript enabled.</div></noscript>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
